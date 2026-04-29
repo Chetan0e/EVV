@@ -1,0 +1,23 @@
+{
+  "short_name": "EVV",
+  "name": "Every Voice for Voiceless",
+  "description": "Civic animal welfare platform to report rescues and donate food.",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192.png?text=EVV",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512.png?text=EVV",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2dd4bf",
+  "background_color": "#0a0f0a"
+}
