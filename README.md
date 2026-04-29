@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://via.placeholder.com/150x150/2dd4bf/0a0f0a?text=EVV" alt="EVV Logo" width="120" />
+  <img src="frontend/src/assets/logo.png" alt="EVV Logo" width="120" />
 </p>
 
 <h1 align="center">EVV — Every Voice for Voiceless</h1>
