@@ -4,11 +4,13 @@ import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import RescueCard from '../components/RescueCard';
 import MapView from '../components/MapView';
+import Loading from '../components/Loading';
 
 export default function NGODashboard() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState([]);
-  
+  const [loading, setLoading] = useState(true);
+
   const fetchReports = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/rescue');
@@ -17,6 +19,8 @@ export default function NGODashboard() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -24,6 +28,7 @@ export default function NGODashboard() {
     if (user?.role === 'ngo') fetchReports();
   }, [user]);
 
+  if (authLoading || (user?.role === 'ngo' && loading)) return <Loading message="Initializing Command Center" />;
   if (!user || user.role !== 'ngo') return <Navigate to="/" />;
 
   return (

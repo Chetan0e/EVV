@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
+import Loading from '../components/Loading';
+
 export default function Profile() {
-  const { user, requestOtp, login, logout } = useAuth();
+  const { user, loading: authLoading, requestOtp, login, logout } = useAuth();
   
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -11,6 +13,8 @@ export default function Profile() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  if (authLoading) return <Loading message="Accessing Secure Profile" />;
+  
   if (user) {
     return (
       <div className="pt-24 pb-20 container mx-auto px-4 max-w-3xl">

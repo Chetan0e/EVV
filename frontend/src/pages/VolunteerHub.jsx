@@ -3,10 +3,12 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { Heart, Truck, MapPin } from 'lucide-react';
+import Loading from '../components/Loading';
 
 export default function VolunteerHub() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
     try {
@@ -16,6 +18,8 @@ export default function VolunteerHub() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +39,7 @@ export default function VolunteerHub() {
     }
   };
 
+  if (authLoading || loading) return <Loading message="Scouting for volunteer opportunities" />;
   if (!user) return <Navigate to="/" />;
 
   return (

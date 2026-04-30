@@ -6,11 +6,13 @@ import MapView from '../components/MapView';
 import FoodCard from '../components/FoodCard';
 import { Plus } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
+import Loading from '../components/Loading';
 
 export default function FoodRescue() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { location } = useLocation();
   const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
   // Form state
@@ -30,6 +32,8 @@ export default function FoodRescue() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,6 +81,7 @@ export default function FoodRescue() {
     }
   };
 
+  if (authLoading || loading) return <Loading message="Finding nearby food donations" />;
   if (!user) return <Navigate to="/" />;
 
   return (

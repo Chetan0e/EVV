@@ -4,8 +4,11 @@ import { HeartPulse, ArrowRight, Camera, Coffee, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AnimatedCounter from '../components/AnimatedCounter';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import Loading from '../components/Loading';
 
 export default function Landing() {
+  const { loading: authLoading } = useAuth();
   const [stats, setStats] = useState({ totalRescues: 0, animalsHelped: 0, activeVolunteers: 0, foodSaved: 0 });
 
   useEffect(() => {
@@ -15,6 +18,8 @@ export default function Landing() {
       }
     }).catch(console.error);
   }, []);
+
+  if (authLoading) return <Loading message="Connecting to EVV" />;
 
   const titleWords = ["Every", "Voice", "for", "Voiceless"];
 

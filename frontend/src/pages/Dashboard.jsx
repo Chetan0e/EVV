@@ -6,6 +6,8 @@ import RescueCard from '../components/RescueCard';
 import { useLocation } from '../hooks/useLocation';
 import { Navigate } from 'react-router-dom';
 
+import Loading from '../components/Loading';
+
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState([]);
@@ -21,7 +23,7 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  if (authLoading) return <div className="pt-24 text-center">Loading...</div>;
+  if (authLoading) return <Loading message="Syncing with EVV Network" />;
   if (!user) return <Navigate to="/" />;
   if (user.role === 'ngo') return <Navigate to="/ngo" />;
 
