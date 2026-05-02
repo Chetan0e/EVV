@@ -38,17 +38,14 @@ app.use(express.json());
 // Rate Limiting
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minute)
+  max: 100, // Limit each IP to 100 requests per minute (increased for dev)
   message: { success: false, message: 'Too many requests, please try again later.' }
 });
 
 app.use('/api/', apiLimiter);
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/evv_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/evv_db')
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
 

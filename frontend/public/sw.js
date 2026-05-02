@@ -1,4 +1,4 @@
-const CACHE_NAME = 'evv-cache-v1';
+const CACHE_NAME = 'evv-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -12,6 +12,18 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
@@ -21,7 +33,10 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
-      })
+        return fetch(event.request).catch(err => {
+          console.log('Fetch failed (offline or network error):', err);
+          // Return a custom offline response if desired
+          return new Response('Network error occurred', { status: 408, headers: { 'Content-Type': 'text/plain' } });
+        });
   );
 });
