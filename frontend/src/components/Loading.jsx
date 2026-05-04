@@ -40,7 +40,7 @@ const Loading = ({ isLoaded }) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white overflow-hidden"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-[#fdfbfb] to-[#ebedee] overflow-hidden"
         >
           {/* Paw Particles */}
           {paws.map((_, i) => (
@@ -70,14 +70,19 @@ const Loading = ({ isLoaded }) => {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* Logo */}
-            <motion.img
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              src={logo}
-              alt="EVV Logo"
-              className="h-[80px] object-contain mb-6"
-            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", type: "spring", bounce: 0.4 }}
+              className="relative mb-8"
+            >
+              <div className="absolute inset-0 bg-[var(--accent-primary)]/20 rounded-full blur-xl animate-pulse" />
+              <img
+                src={logo}
+                alt="EVV Logo"
+                className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-full shadow-xl border-4 border-white"
+              />
+            </motion.div>
 
             {/* Text Animation */}
             <motion.div
