@@ -121,6 +121,7 @@ export default function VolunteerHub() {
       const res = await volunteerAPI.getTasks({});
       setTasks(res.data?.data?.length ? res.data.data : MOCK_TASKS);
     } catch (err) {
+      console.error('Failed to fetch tasks:', err);
       setTasks(MOCK_TASKS);
     }
     setLoading(false);
@@ -137,6 +138,7 @@ export default function VolunteerHub() {
       setClaimedIds([...claimedIds, taskId]);
       toast.success('Task claimed! Check My Tasks for details.');
     } catch (err) {
+      console.error('Failed to claim task:', err);
       toast.error('Failed to claim task. Please try again.');
     }
   };

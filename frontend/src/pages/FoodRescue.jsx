@@ -82,23 +82,47 @@ export default function FoodRescue() {
     setLoadingDonations(true);
     try {
       // Get user location
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const { latitude, longitude } = pos.coords;
-          const res = await foodAPI.getAvailable(latitude, longitude);
-          setDonations(res.data?.data || []);
-        },
-        async () => {
-          // Location denied - use Kolhapur default
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            try {
+              const { latitude, longitude } = pos.coords;
+              const res = await foodAPI.getAvailable(latitude, longitude);
+              setDonations(res.data?.data || MOCK_DONATIONS);
+            } catch (err) {
+              console.error('Failed to fetch donations with location:', err);
+              setDonations(MOCK_DONATIONS);
+            }
+            setLoadingDonations(false);
+          },
+          async () => {
+            // Location denied - use Kolhapur default
+            try {
+              const res = await foodAPI.getAvailable(16.7050, 74.2433);
+              setDonations(res.data?.data || MOCK_DONATIONS);
+            } catch (err) {
+              console.error('Failed to fetch donations with default location:', err);
+              setDonations(MOCK_DONATIONS);
+            }
+            setLoadingDonations(false);
+          }
+        );
+      } else {
+        // Geolocation not supported - use default
+        try {
           const res = await foodAPI.getAvailable(16.7050, 74.2433);
-          setDonations(res.data?.data || []);
+          setDonations(res.data?.data || MOCK_DONATIONS);
+        } catch (err) {
+          console.error('Failed to fetch donations:', err);
+          setDonations(MOCK_DONATIONS);
         }
-      );
+        setLoadingDonations(false);
+      }
     } catch (err) {
-      // Empty state on error
-      setDonations([]);
+      console.error('Error in fetchDonations:', err);
+      setDonations(MOCK_DONATIONS);
+      setLoadingDonations(false);
     }
-    setLoadingDonations(false);
   };
 
   const handleDonateSubmit = async (e) => {
@@ -146,8 +170,9 @@ export default function FoodRescue() {
     try {
       await foodAPI.claim(id);
       setClaimedIds([...claimedIds, id]);
-      toast.success(`You've claimed this donation! Contact the donor at ${donatorPhone || 'the provided number'} to coordinate pickup.`);
+      toast.success(`You've claimed this donation! Contact the donor at ${donorPhone || 'the provided number'} to coordinate pickup.`);
     } catch (err) {
+      console.error('Failed to claim donation:', err);
       toast.error('Failed to claim donation. Please try again.');
     }
   };
@@ -158,8 +183,13 @@ export default function FoodRescue() {
         (pos) => {
           setFormData({ ...formData, location: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}` });
         },
-        (err) => alert("Could not get location.")
+        (err) => {
+          console.error('Geolocation error:', err);
+          toast.error('Could not get location. Please enter manually.');
+        }
       );
+    } else {
+      toast.error('Geolocation is not supported by your browser.');
     }
   };
 

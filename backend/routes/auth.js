@@ -12,28 +12,28 @@ const otpStore = new Map();
 router.post('/send-otp', async (req, res) => {
   const { phone } = req.body;
   if (!phone) return res.status(400).json({ success: false, message: 'Phone number required' });
-  
+
   // Generate 6-digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  
+
   // Store OTP with 5-minute expiration
   otpStore.set(phone, { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
-  
+
   // In a real application, we would send this OTP via SMS (Twilio/AWS SNS)
   // For now, we log it and return it in the response so the user can test
   console.log(`[OTP] Generated for ${phone}: ${otp}`);
-  
-  res.json({ 
-    success: true, 
-    message: 'OTP generated. Check console or use the provided OTP for testing.', 
-    otp 
-  }); 
+
+  res.json({
+    success: true,
+    message: 'OTP generated. Check console or use the provided OTP for testing.',
+    otp
+  });
 });
 
 // Verify OTP and Login/Register
 router.post('/verify-otp', async (req, res) => {
   const { phone, otp, name, role } = req.body;
-  
+
   const storedOtpData = otpStore.get(phone);
   if (!storedOtpData) {
     return res.status(400).json({ success: false, message: 'OTP not requested or expired' });
