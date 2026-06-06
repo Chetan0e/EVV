@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Lock } from 'lucide-react';
+import { Shield, Lock, Eye, EyeOff } from 'lucide-react';
 import { adminAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -12,6 +12,7 @@ export default function AdminLogin() {
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,14 +70,23 @@ export default function AdminLogin() {
               <label className="block font-[Plus_Jakarta_Sans] font-bold text-[#111827] mb-2">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="Enter admin password"
-                value={credentials.password}
-                onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                className="w-full h-[52px] border border-[#D1D5DB] rounded-xl px-4 font-[Plus_Jakarta_Sans] text-[#111827] outline-none focus:border-[#111827] transition-colors"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter admin password"
+                  value={credentials.password}
+                  onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                  className="w-full h-[52px] border border-[#D1D5DB] rounded-xl px-4 pr-12 font-[Plus_Jakarta_Sans] text-[#111827] outline-none focus:border-[#111827] transition-colors"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <button
